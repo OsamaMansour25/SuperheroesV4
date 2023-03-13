@@ -3,6 +3,9 @@ package com.example.demo.Controllers;
 import com.example.demo.Dto.SuperPowerDTO;
 import com.example.demo.Model.SuperheroModel;
 import com.example.demo.Repositories.SuperheroRepository;
+import com.example.demo.SuperInterface.ISuperHeroRepository;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.context.ApplicationContext;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -15,15 +18,20 @@ import java.util.List;
 @RequestMapping(path="/superhero")
 @Controller
 public class SuperheroController {
-    private SuperheroRepository repository;
-
-    public SuperheroController(SuperheroRepository repository) {
-        this.repository = repository;
+  //  private SuperheroRepository repository;
+    ISuperHeroRepository repository;
+    public SuperheroController(ApplicationContext context, @Value("${superhero.respository.impl}") String impl) {
+        repository = (ISuperHeroRepository) context.getBean(impl);
     }
+
+/*    public SuperheroController(SuperheroRepository repository) {
+       // this.repository = repository;
+        this.repository = repository;
+    }*/
     @GetMapping("/superherolist")
-    public ResponseEntity<List<SuperheroModel>> getSuperheroes() {
+    public ResponseEntity<List<SuperheroModel>> getAll() {
         System.out.println("hej");
-        List<SuperheroModel> superheroList = repository.getSuperheroList();
+        List<SuperheroModel> superheroList = repository.getAll();
         return new ResponseEntity<>(superheroList, HttpStatus.OK);
     }
     @GetMapping("/{name}")

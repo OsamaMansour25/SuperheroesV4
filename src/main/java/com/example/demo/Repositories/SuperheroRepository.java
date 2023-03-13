@@ -1,18 +1,16 @@
 package com.example.demo.Repositories;
 
-import com.example.demo.Dto.CityDTO;
 import com.example.demo.Dto.SuperPowerDTO;
-import com.example.demo.Dto.SuperheroPowerDTO;
 import com.example.demo.Model.SuperheroModel;
+import com.example.demo.SuperInterface.ISuperHeroRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 
-import javax.xml.transform.Result;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-@Repository
-public class SuperheroRepository {
+@Repository("Superhero_db")
+public class SuperheroRepository implements ISuperHeroRepository {
     @Value("${spring.datasource.url}")
     String db_url;
     @Value("${spring.datasource.username}")
@@ -20,7 +18,7 @@ public class SuperheroRepository {
     @Value("${spring.datasource.password}")
     String pwd;
 
-    public List<SuperheroModel> getSuperheroList() {
+    public List<SuperheroModel> getAll() {
         List<SuperheroModel> superheroes = new ArrayList<>();
         try (Connection con = DriverManager.getConnection(db_url, u_id, pwd)) {
             String SQL = "SELECT * from superhero";
